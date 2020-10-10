@@ -1,0 +1,53 @@
+<h1>Products#index</h1>
+<%= form_tag products_index_path, :method => :post do %>
+<p>
+  <%= text_field_tag :search, @term %>
+  <%= submit_tag "Search", :name => nil %>
+<% end %>
+
+<h1>Productos</h1>
+<table>
+<thead>
+  <th>Name</th>
+  <th>Precio</th>
+  <th>Descripcion</th>
+  <th>Categoria</th>
+</thead>
+<tbody>
+   <% @products.each do |pro| %>
+      <tr>
+        <td><%= pro.title %></td>
+        <td><%= pro.price %></td>
+        <td><%= pro.description %></td>
+        <td><%= pro.categories.map(&:name) %></td>
+      </tr>
+   <% end %>
+</tbody>
+</table>
+<br>
+<table border="2">
+<thead>
+  <tr>
+    <td>Pagina actual</td>
+    <td>siguiente</td>
+    <td>total paginas</td>
+    <td>es la primera</td>
+    <td>es la ultima</td>
+    <td></td>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><%= @products.current_cursor %></td>
+    <td><%= @products.next_page_cursor %></td>
+    <td><%= @products.total_pages %></td>
+    <td><%= @products.first_page? %></td>
+    <td><%= @products.last_page? %></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+<br>
+<% unless @products.last_page? %>
+  <%= link_to 'Next', products_index_path(page: @products.next_page_cursor, search: @term) %>
+<% end %>
