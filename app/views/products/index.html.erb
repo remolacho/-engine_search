@@ -6,12 +6,16 @@
 <% end %>
 
 <h1>Productos</h1>
+<% unless @products.last_page? %>
+  <%= link_to 'Next', products_index_path(page: @products.next_page_cursor, search: @term) %>
+<% end %>
 <table>
 <thead>
   <th>Name</th>
   <th>Precio</th>
   <th>Descripcion</th>
   <th>Categoria</th>
+  <th></th>
 </thead>
 <tbody>
    <% @products.each do |pro| %>
@@ -20,6 +24,7 @@
         <td><%= pro.price %></td>
         <td><%= pro.description %></td>
         <td><%= pro.categories.map(&:name) %></td>
+        <td><%= link_to 'more like', products_index_path(product_id: pro.id) %></td>
       </tr>
    <% end %>
 </tbody>
@@ -48,6 +53,33 @@
 </tbody>
 </table>
 <br>
-<% unless @products.last_page? %>
-  <%= link_to 'Next', products_index_path(page: @products.next_page_cursor, search: @term) %>
+
+<table>
+  <thead>
+    <% @categories.each do |category| %>
+    <tr>
+      <td><%= "#{category[:name]}(#{category[:count]})" %></td>
+    </tr>
+    <% end %>
+  </thead>
+</table>
+
+<% if @more_like.present? %>
+  <h1>More like</h1>
+  <table>
+    <thead>
+    <th>Name</th>
+    <th>Precio</th>
+    <th>Descripcion</th>
+    </thead>
+    <tbody>
+    <% @more_like.each do |pro| %>
+      <tr>
+        <td><%= pro.title %></td>
+        <td><%= pro.price %></td>
+        <td><%= pro.description %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
 <% end %>

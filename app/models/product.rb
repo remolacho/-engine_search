@@ -3,13 +3,15 @@ class Product < ApplicationRecord
   has_many :categories, through: :category_products
 
   searchable auto_index: false do
-    text :title, :description
-    text :categories do
+    text :title, more_like_this: true
+    text :description
+    text :categories, more_like_this: true do
       categories.map { |category| category.name }
     end
     boolean :active
     boolean :is_deleted
     time :created_at
+    integer :category_ids, :multiple => true
   end
 
   after_create :reindex_products
